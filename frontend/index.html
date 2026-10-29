@@ -1,0 +1,511 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CardioPredict | Heart Health</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f5fb;
+      color: #252544;
+    }
+
+    header {
+      background: white;
+      padding: 20px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e8e8f0;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: bold;
+      color: #7555ed;
+    }
+
+    .status {
+      font-size: 12px;
+      color: #777;
+    }
+
+    .container {
+      max-width: 1100px;
+      width: 90%;
+      margin: 40px auto;
+    }
+
+    .hero {
+      margin-bottom: 30px;
+    }
+
+    .hero small {
+      color: #7555ed;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+    }
+
+    .hero h1 {
+      margin: 15px 0;
+      font-size: clamp(32px, 5vw, 45px);
+      line-height: 1.2;
+    }
+
+    .hero h1 span {
+      color: #7555ed;
+    }
+
+    .hero p {
+      color: #777b91;
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.7fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e9e9f2;
+      border-radius: 18px;
+      padding: 26px;
+      box-shadow: 0 8px 25px #22224408;
+    }
+
+    .card h2 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #85879a;
+      font-size: 13px;
+      margin-bottom: 25px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 19px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 9px;
+      color: #555872;
+    }
+
+    input, select {
+      width: 100%;
+      height: 45px;
+      border: 1px solid #e1e2ee;
+      border-radius: 9px;
+      padding: 0 12px;
+      background: #fbfbfe;
+      color: #33344f;
+      outline: none;
+      font-size: 13px;
+    }
+
+    input:focus, select:focus {
+      border-color: #7555ed;
+      box-shadow: 0 0 0 3px #7555ed18;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    button {
+      padding: 14px 17px;
+      border-radius: 9px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .predict {
+      flex: 1;
+      background: linear-gradient(110deg, #7555ed, #9659ec);
+      color: white;
+    }
+
+    .predict:hover {
+      opacity: 0.9;
+    }
+
+    .predict:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .reset {
+      background: #f0eff8;
+      color: #555;
+    }
+
+    .result-card {
+      text-align: center;
+    }
+
+    .heart {
+      width: 80px;
+      height: 80px;
+      margin: 20px auto;
+      border-radius: 25px;
+      display: grid;
+      place-items: center;
+      background: #f0edff;
+      color: #7555ed;
+      font-size: 40px;
+    }
+
+    #result {
+      margin: 18px 0 12px;
+      font-size: 21px;
+    }
+
+    #message {
+      color: #777b91;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .result-info {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #eeeef5;
+      text-align: left;
+      color: #777b91;
+      font-size: 12px;
+      line-height: 2;
+    }
+
+    .notice {
+      margin-top: 22px;
+      background: #f8f7ff;
+      padding: 13px;
+      border-radius: 9px;
+      color: #777b91;
+      font-size: 11px;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    .error {
+      color: #b42335 !important;
+    }
+
+    .success {
+      color: #16845a;
+    }
+
+    .warning {
+      color: #c34c5a;
+    }
+
+    footer {
+      text-align: center;
+      color: #9294a7;
+      font-size: 12px;
+      padding: 30px 0;
+    }
+
+    @media (max-width: 750px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        width: 94%;
+        margin-top: 25px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 450px) {
+      header {
+        padding: 18px 5%;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .status {
+        font-size: 10px;
+      }
+
+      .buttons {
+        flex-direction: column-reverse;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">♥ CardioPredict</div>
+    <div class="status">ML Prediction System</div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <small>HEART HEALTH ANALYSIS</small>
+      <h1>Heart Disease<br><span>Prediction</span></h1>
+      <p>
+        Enter the patient measurements below to receive a prediction
+        from your trained machine-learning classification model.
+      </p>
+    </section>
+
+    <div class="layout">
+      <section class="card">
+        <h2>Patient Information</h2>
+        <p class="subtitle">Enter all 13 model features.</p>
+
+        <form id="heartForm">
+          <div class="form-grid">
+
+            <div class="field">
+              <label for="age">Age</label>
+              <input id="age" name="age" type="number" min="1" max="120" placeholder="e.g. 45" required>
+            </div>
+
+            <div class="field">
+              <label for="sex">Sex</label>
+              <select id="sex" name="sex" required>
+                <option value="">Select sex</option>
+                <option value="1">Male</option>
+                <option value="0">Female</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="cp">Chest Pain Type</label>
+              <select id="cp" name="cp" required>
+                <option value="">Select type</option>
+                <option value="0">Typical angina</option>
+                <option value="1">Atypical angina </option>
+                <option value="2">Non-anginal pain</option>
+                <option value="3">Asymptomatic</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="trestbps">Resting Blood Pressure</label>
+              <input id="trestbps" name="trestbps" type="number" min="50" max="250" placeholder="e.g. 120" required>
+            </div>
+
+            <div class="field">
+              <label for="chol">Cholesterol (mg/dl)</label>
+              <input id="chol" name="chol" type="number" min="50" max="700" placeholder="e.g. 200" required>
+            </div>
+
+            <div class="field">
+              <label for="fbs">Fasting Blood Sugar > 120</label>
+              <select id="fbs" name="fbs" required>
+                <option value="">Select answer</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="restecg">Resting ECG</label>
+              <select id="restecg" name="restecg" required>
+                <option value="">Select type</option>
+                <option value="0">Normal </option>
+                <option value="1">ST-T abnormality</option>
+                <option value="2">LV hypertrophy</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="thalach">Maximum Heart Rate</label>
+              <input id="thalach" name="thalach" type="number" min="40" max="250" placeholder="e.g. 150" required>
+            </div>
+
+            <div class="field">
+              <label for="exang">Exercise-Induced Angina</label>
+              <select id="exang" name="exang" required>
+                <option value="">Select answer</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="oldpeak">ST Depression (Oldpeak)</label>
+              <input id="oldpeak" name="oldpeak" type="number" min="0" max="10" step="any" placeholder="e.g. 1.0" required>
+            </div>
+
+            <div class="field">
+              <label for="slope">ST Segment Slope</label>
+              <select id="slope" name="slope" required>
+                <option value="">Select slope</option>
+                <option value="0">Upsloping</option>
+                <option value="1">Flat</option>
+                <option value="2">Downsloping</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="ca">Major Vessels (CA)</label>
+              <select id="ca" name="ca" required>
+                <option value="">Select value</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="thal">Thalassemia (Thal)</label>
+              <select id="thal" name="thal" required>
+                <option value="">Select value</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="buttons">
+            <button type="reset" class="reset">Reset Form</button>
+            <button type="submit" class="predict" id="predictBtn">
+              Predict Heart Disease →
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="card result-card">
+        <h2>Prediction Result</h2>
+        <div class="heart">♥</div>
+
+        <h3 id="result">Ready to analyze</h3>
+        <p id="message">
+          Complete the form and click the prediction button.
+     
+        </p>
+
+        <div class="result-info">
+          <p>Model: Gaussian Naive Bayes</p>
+        </div>
+
+        <div class="notice">
+          Educational demonstration only. This prediction is not a
+          medical diagnosis. Consult a qualified healthcare professional
+          for medical advice.
+        </div>
+      </aside>
+    </div>
+
+  </main>
+
+  <script>
+    const form = document.getElementById("heartForm");
+    const button = document.getElementById("predictBtn");
+    const result = document.getElementById("result");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      button.disabled = true;
+      button.textContent = "Analyzing...";
+      result.className = "";
+      result.textContent = "Processing prediction";
+      message.className = "";
+      message.textContent = "Connecting to the machine-learning model...";
+
+      const formData = new FormData(form);
+      const data = {};
+
+      for (const [key, value] of formData.entries()) {
+        data[key] = Number(value);
+      }
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        const output = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            typeof output.detail === "string"
+              ? output.detail
+              : "The API rejected the submitted data."
+          );
+        }
+
+        if (Number(output.prediction) === 1) {
+          result.textContent = "Heart issues detected";
+          result.className = "warning";
+        } else {
+          result.textContent = "No issues related to Heart";
+          result.className = "success";
+        }
+
+        message.textContent = output.result ||
+          "Prediction received successfully.";
+
+      } catch (error) {
+        result.textContent = "Prediction failed";
+        result.className = "error";
+
+        message.textContent =
+          error.message === "Failed to fetch"
+            ? "Cannot connect to FastAPI. Start your backend and check its URL and CORS settings."
+            : error.message;
+
+        message.className = "error";
+      } finally {
+        button.disabled = false;
+        button.textContent = "Predict Heart Disease →";
+      }
+    });
+
+    form.addEventListener("reset", function () {
+      result.className = "";
+      result.textContent = "Ready to analyze";
+      message.className = "";
+      message.textContent =
+        "Complete the form and click the prediction button. Your model's output will appear here.";
+    });
+  </script>
+</body>
+</html>
